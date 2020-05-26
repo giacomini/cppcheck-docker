@@ -1,18 +1,14 @@
 FROM alpine
 
-MAINTAINER Neszt Tibor <tibor@neszt.hu>
+ARG VERSION=2.0
 
 RUN \
-	T="$(date +%s)" && \
-	apk add --no-cache -t .required_apks git make g++ pcre-dev && \
-	mkdir -p /usr/src /src && cd /usr/src && \
-	git clone https://github.com/danmar/cppcheck.git && \
-	cd cppcheck && \
-	make install FILESDIR=/cfg HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG --static" -j `getconf _NPROCESSORS_ONLN` && \
-	strip /usr/bin/cppcheck && \
-	apk del .required_apks && \
-	rm -rf /usr/src && \
-	T="$(($(date +%s)-T))" && \
-	printf "Build time: %dd %02d:%02d:%02d\n" "$((T/86400))" "$((T/3600%24))" "$((T/60%60))" "$((T%60))"
-
-ENTRYPOINT ["cppcheck", "/src"]
+  apk add --no-cache -t .apks make g++ && \
+  mkdir -p /usr/src /src && cd /usr/src && \
+  wget https://github.com/danmar/cppcheck/archive/${VERSION}.tar.gz && \
+  tar zxf ${VERSION}.tar.gz && \
+  cd cppcheck-${VERSION} && \
+  make install FILESDIR=/usr/share CXXFLAGS="-O2 -DNDEBUG --static" && \
+  strip /usr/bin/cppcheck && \
+  apk del .apks && \
+  rm -rf /usr/src

@@ -2,32 +2,32 @@
 
 ## Introduction
 
-Dockerfile to build latest [cppcheck](https://github.com/danmar/cppcheck).
+Dockerfile to build a minimal image containing
+[cppcheck](https://github.com/danmar/cppcheck).
 
-Main aims:
+Ideally, by default, it builds the latest cppcheck release, currently 2.0.
 
-1. Ability to build the most recent version of [cppcheck](https://github.com/danmar/cppcheck). With this Dockerfile you can build the [lastest master](https://github.com/danmar/cppcheck/commits/master) branch.
+## Building
 
-2. Make the result image as small as possible. This Dockerfile uses [alpine linux](https://alpinelinux.org) and removes any unneeded file and strips the resulting cppcheck binary.
+To build the image with the default version
 
-3. Easy to use. Only need to mount a directory to /src to start check.
+```
+docker build -t cppcheck
+```
+
+To build the image with a given version, e.g. 1.90
+
+```
+docker build --build-arg VERSION=1.90 -t cppcheck
+```
 
 ## Usage
 
-```bash
-docker run -v $(pwd):/src cppcheck
-```
-
-To allow <kbd>Ctrl</kbd> + <kbd>C</kbd> during cppcheck run use `-t` docker argument:
 
 ```bash
-docker run -t -v $(pwd):/src cppcheck
+docker run --rm -it -v $(pwd):/src cppcheck
 ```
 
 ## References
 
 [Cppcheck manual](http://cppcheck.sourceforge.net/manual.html)
-
-## Build your own image:
-
-docker build -t cppcheck .
